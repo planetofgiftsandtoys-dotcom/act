@@ -509,6 +509,23 @@ app.post("/api/call/:fn", async (req, res) => {
 });
 
 app.get("/healthz", (req, res) => res.send("ok"));
+app.get("/__debug/files", (req, res) => {
+  const fs = require("fs");
+  function walk(dir, depth) {
+    if (depth > 3) return [];
+    let out = [];
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return [dir + " (unreadable: " + e.message + ")"]; }
+    for (const e of entries) {
+      if (e.name === "node_modules" || e.name === ".git") continue;
+      const p = dir + "/" + e.name;
+      out.push(p + (e.isDirectory() ? "/" : ""));
+      if (e.isDirectory()) out = out.concat(walk(p, depth + 1));
+    }
+    return out;
+  }
+  res.type("text/plain").send(walk(__dirname, 0).join("\n"));
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("POGT real backend listening on " + PORT));
