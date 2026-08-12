@@ -1,0 +1,18 @@
+{
+  "name": "pogt-real-backend",
+  "version": "1.0.0",
+  "description": "Planet of Gifts and Toys - live backend backed by Google Sheets",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": { "node": ">=18" },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "googleapis": "^174.0.1"
+  }
+}

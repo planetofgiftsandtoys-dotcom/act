@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <style>
+    :root{
+      --space-deep:#0b0f2e; --space-purple:#2d1b4e; --nebula-pink:#c13584;
+      --gold:#e8b84b; --gold-light:#f7d888; --alien:#6fcf6f; --cream:#fff9f0;
+      --ink:#1c1530; --danger:#e2574c; --radius:16px;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;background:var(--space-deep);color:#f5f3ff;font-family:'Segoe UI',Arial,sans-serif;}
+    a{color:inherit;}
+    button{font-family:inherit;cursor:pointer;border:none;}
+    header{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:rgba(11,15,46,0.9);position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(232,184,75,0.25);flex-wrap:wrap;gap:10px;}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;}
+    .brand .badge{width:36px;height:36px;border-radius:50%;background:conic-gradient(from 180deg,var(--gold),var(--gold-light),var(--gold));display:flex;align-items:center;justify-content:center;font-size:18px;}
+    nav{display:flex;gap:8px;flex-wrap:wrap;}
+    .nav-btn{padding:8px 14px;border-radius:999px;background:rgba(255,255,255,0.08);color:#fff;font-weight:700;font-size:13px;}
+    .nav-btn.active{background:var(--nebula-pink);}
+    .cart-btn{padding:8px 14px;border-radius:999px;background:var(--gold);color:var(--space-deep);font-weight:800;font-size:13px;position:relative;}
+    .cart-count{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:800;}
+    main{max-width:1000px;margin:0 auto;padding:24px 18px 60px;}
+    .view{display:none;} .view.active{display:block;}
+    h1,h2,h3{font-weight:800;}
+    .section-title{font-size:19px;margin:6px 0 16px;display:flex;align-items:center;justify-content:space-between;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+    .card{background:var(--cream);color:var(--ink);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;}
+    .card-img{height:130px;background:linear-gradient(135deg,var(--space-purple),var(--space-deep));display:flex;align-items:center;justify-content:center;font-size:44px;color:#fff;overflow:hidden;position:relative;}
+    .card-img img{width:100%;height:100%;object-fit:cover;}
+    .video-badge{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);color:#fff;font-size:10px;padding:3px 7px;border-radius:999px;font-weight:700;}
+    .card-body{padding:12px;display:flex;flex-direction:column;gap:6px;flex:1;}
+    .card-title{font-weight:700;font-size:14px;}
+    .card-cat{font-size:11px;color:var(--nebula-pink);font-weight:800;text-transform:uppercase;}
+    .card-seller{font-size:11px;color:#8a8397;}
+    .card-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px;}
+    .price{font-weight:800;font-family:monospace;font-size:15px;}
+    .add-btn{background:var(--space-deep);color:#fff;padding:7px 12px;border-radius:999px;font-weight:700;font-size:12px;}
+    .stock-tag{font-size:11px;color:#8a8397;}
+    .panel{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:var(--radius);padding:20px;margin-bottom:18px;}
+    .field{margin-bottom:12px;}
+    .field label{display:block;font-size:12px;font-weight:700;color:var(--gold-light);margin-bottom:4px;text-transform:uppercase;}
+    .field input,.field select,.field textarea{width:100%;padding:9px 11px;border-radius:9px;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.25);color:#fff;font-size:14px;font-family:inherit;}
+    .btn-primary{background:var(--nebula-pink);color:#fff;padding:11px 20px;border-radius:999px;font-weight:800;font-size:14px;width:100%;}
+    .btn-secondary{background:var(--alien);color:var(--space-deep);padding:11px 20px;border-radius:999px;font-weight:800;font-size:14px;width:100%;}
+    .btn-small{padding:7px 12px;border-radius:999px;font-weight:800;font-size:11px;}
+    .btn-approve{background:var(--alien);color:var(--space-deep);}
+    .btn-reject{background:var(--danger);color:#fff;}
+    .btn-link{background:transparent;color:var(--gold-light);font-weight:700;font-size:12px;text-decoration:underline;padding:4px;}
+    .cart-item{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,0.05);border-radius:12px;margin-bottom:8px;}
+    .cart-item .ci-title{flex:1;font-weight:700;font-size:14px;}
+    .qty-box{display:flex;align-items:center;background:rgba(255,255,255,0.1);border-radius:999px;}
+    .qty-box button{width:28px;height:28px;background:transparent;color:#fff;font-size:16px;font-weight:700;}
+    .qty-box span{width:26px;text-align:center;font-weight:700;font-size:13px;}
+    .remove-x{background:transparent;color:var(--danger);font-size:17px;font-weight:800;}
+    .summary-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;color:#cfc9e8;}
+    .summary-row b{color:#fff;}
+    .summary-row.total{border-top:1px solid rgba(255,255,255,0.15);padding-top:10px;font-size:17px;}
+    .summary-row.total b{color:var(--gold-light);font-family:monospace;}
+    .pay-toggle{display:flex;gap:10px;margin-bottom:16px;}
+    .pay-opt{flex:1;padding:12px;border-radius:12px;border:2px solid rgba(255,255,255,0.15);text-align:center;font-weight:800;font-size:13px;background:rgba(255,255,255,0.04);}
+    .pay-opt.active{border-color:var(--gold);background:rgba(232,184,75,0.12);color:var(--gold-light);}
+    .qr-box{text-align:center;background:#fff;color:#1c1530;border-radius:14px;padding:18px;margin:14px 0;}
+    .qr-box img{width:200px;height:200px;}
+    .qr-amount{font-size:22px;font-weight:800;margin:8px 0 2px;}
+    .note{font-size:12px;color:#a79fc9;background:rgba(255,255,255,0.05);padding:10px 12px;border-radius:10px;margin-top:10px;line-height:1.5;}
+    .empty{text-align:center;padding:50px 16px;color:#a79fc9;}
+    .preview-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+    .preview-row img,.preview-row video{width:60px;height:60px;border-radius:10px;object-fit:cover;}
+    .upload-label{display:inline-block;padding:8px 16px;background:var(--gold);color:var(--space-deep);border-radius:999px;font-weight:800;font-size:13px;cursor:pointer;}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .confirm-box{max-width:480px;margin:0 auto;text-align:center;padding:30px 20px;}
+    .big-emoji{font-size:56px;}
+    .tab-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+    .tab-btn{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.08);font-weight:700;font-size:13px;color:#fff;}
+    .tab-btn.active{background:var(--gold);color:var(--space-deep);}
+    .sub-view{display:none;} .sub-view.active{display:block;}
+    .seller-card{background:rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.12);}
+    .seller-card .sc-row{font-size:13px;color:#cfc9e8;margin-bottom:3px;}
+    .seller-card .sc-row b{color:#fff;}
+    .seller-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+    .order-card{background:rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.12);}
+    .order-card .oc-row{font-size:13px;color:#cfc9e8;margin-bottom:3px;}
+    .order-card .oc-row b{color:#fff;}
+    .status-pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;}
+    .status-Received{background:#3b4a8f;} .status-Processing{background:#c99a2e;color:#1c1530;}
+    .status-Shipped{background:#2d6fc1;} .status-Delivered{background:#4a9e4a;}
+    .status-Cancelled{background:var(--danger);}
+    .status-Pending{background:#c99a2e;color:#1c1530;} .status-Approved{background:#4a9e4a;} .status-Rejected{background:var(--danger);}
+    .order-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+    select.status-select{width:auto;display:inline-block;padding:6px 10px;font-size:12px;border-radius:8px;background:rgba(0,0,0,0.3);color:#fff;border:1px solid rgba(255,255,255,0.2);}
+    .dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+    .dash-header .who{font-size:14px;color:#cfc9e8;}
+    .dash-header .who b{color:var(--gold-light);}
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="badge">👽</div>Planet of Gifts and Toys</div>
+  <nav>
+    <button class="nav-btn active" data-view="home" onclick="go('home')">Shop</button>
+    <button class="nav-btn" data-view="seller" onclick="go('seller')">Seller Dashboard</button>
+    <button class="nav-btn" data-view="admin" onclick="go('admin')">Admin</button>
+    <button class="cart-btn" onclick="go('cart')">🛒 Cart<span class="cart-count" id="cartCount">0</span></button>
+  </nav>
+</header>
+
+<main>
+  <!-- HOME -->
+  <div class="view active" id="view-home">
+    <h2 class="section-title">All Products</h2>
+    <div id="loadingProducts" class="empty">Loading products…</div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+
+  <!-- CART -->
+  <div class="view" id="view-cart">
+    <h2 class="section-title">Your Cart</h2>
+    <div id="cartItemsWrap"></div>
+    <div class="panel" id="cartSummaryPanel" style="display:none">
+      <div class="summary-row"><span>Item Subtotal</span><b id="sSubtotal">₹0</b></div>
+      <div class="summary-row"><span>&nbsp;&nbsp;— Base Price</span><b id="sBase">₹0</b></div>
+      <div class="summary-row"><span>&nbsp;&nbsp;— GST (18%)</span><b id="sGst">₹0</b></div>
+      <div class="summary-row"><span>Shipping</span><b id="sShipping">₹0</b></div>
+      <div class="summary-row total"><span>Grand Total</span><b id="sTotal">₹0</b></div>
+      <button class="btn-primary" style="margin-top:12px" onclick="go('checkout')">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- CHECKOUT -->
+  <div class="view" id="view-checkout">
+    <h2 class="section-title">Checkout</h2>
+    <div class="panel">
+      <div class="field"><label>Full Name</label><input id="cName"></div>
+      <div class="field"><label>Phone</label><input id="cPhone"></div>
+      <div class="field"><label>Delivery Address</label><textarea id="cAddress" rows="3"></textarea></div>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">Payment Mode</h3>
+      <div class="pay-toggle">
+        <div class="pay-opt active" id="opt-COD" onclick="setPaymentMode('COD')">💵 Cash on Delivery</div>
+        <div class="pay-opt" id="opt-Prepaid" onclick="setPaymentMode('Prepaid')">📱 Prepaid (UPI)</div>
+      </div>
+      <div id="checkoutSummary"></div>
+      <div id="qrArea"></div>
+      <button class="btn-primary" style="margin-top:14px" onclick="submitOrder()">Confirm Order</button>
+      <div id="orderStatusMsg"></div>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div class="view" id="view-confirm">
+    <div class="confirm-box" id="confirmBox"></div>
+  </div>
+
+  <!-- SELLER DASHBOARD -->
+  <div class="view" id="view-seller">
+    <h2 class="section-title">Seller Dashboard</h2>
+
+    <div id="sellerLoggedOut">
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="login" onclick="sellerTab('login')">Seller Login</button>
+        <button class="tab-btn" data-tab="register" onclick="sellerTab('register')">Register as Seller</button>
+        <button class="tab-btn" data-tab="owner" onclick="sellerTab('owner')">Store Owner Access</button>
+      </div>
+
+      <div class="sub-view active" id="sub-login">
+        <div class="panel">
+          <h3 style="margin-top:0">Log in to your seller account</h3>
+          <div class="field"><label>Email</label><input id="loginEmail" type="email"></div>
+          <div class="field"><label>Password</label><input id="loginPassword" type="password"></div>
+          <button class="btn-secondary" onclick="doSellerLogin()">Log In</button>
+          <div id="sellerLoginMsg"></div>
+          <p class="note">Not registered yet? Use the "Register as Seller" tab. Once approved, we'll email you your login password.</p>
+        </div>
+      </div>
+
+      <div class="sub-view" id="sub-register">
+        <div class="panel">
+          <h3 style="margin-top:0">Register as a Seller</h3>
+          <p class="note" style="margin-top:0">Submit your details below. Our team reviews every request — once approved, we'll email you a login for this dashboard.</p>
+          <div class="field"><label>Seller Name *</label><input id="rName"></div>
+          <div class="field"><label>Business Name *</label><input id="rBusiness"></div>
+          <div class="field"><label>Email ID *</label><input id="rEmail" type="email"></div>
+          <div class="field"><label>Contact Number *</label><input id="rContact"></div>
+          <div class="field"><label>Address *</label><textarea id="rAddress" rows="2"></textarea></div>
+          <div class="field"><label>Bank Account Holder Name</label><input id="rAccHolder"></div>
+          <div class="field"><label>Bank Account Number</label><input id="rAccNumber"></div>
+          <div class="field"><label>IFSC Code</label><input id="rIfsc"></div>
+          <div class="field"><label>Bank Name</label><input id="rBankName"></div>
+          <div class="field"><label>UPI ID</label><input id="rUpi" placeholder="yourname@bank"></div>
+          <button class="btn-secondary" onclick="submitSellerRegistration()">Submit Registration</button>
+          <div id="registerMsg"></div>
+        </div>
+      </div>
+
+      <div class="sub-view" id="sub-owner">
+        <div class="panel">
+          <h3 style="margin-top:0">Store owner access</h3>
+          <p class="note" style="margin-top:0">For the store owner only — lets you publish a listing on behalf of any approved seller.</p>
+          <div class="field"><label>Owner Password</label><input id="sellerPassword" type="password"></div>
+          <button class="btn-secondary" onclick="sellerLoginOwner()">Unlock Add Product</button>
+          <div id="ownerLoginMsg"></div>
+        </div>
+        <div class="panel" id="addProductPanelOwner" style="display:none">
+          <h3 style="margin-top:0">Add New Product (as owner)</h3>
+          <div class="field"><label>Selling as (approved vendor)</label>
+            <select id="pSellerId"><option value="">— select vendor —</option></select>
+          </div>
+          <div id="ownerProductForm"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sellerLoggedIn" style="display:none">
+      <div class="dash-header">
+        <div class="who">Logged in as <b id="dashSellerName"></b> — <span id="dashBusinessName"></span></div>
+        <button class="btn-link" onclick="sellerLogout()">Log out</button>
+      </div>
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="mylistings" onclick="dashTab('mylistings')">My Listings</button>
+        <button class="tab-btn" data-tab="addlisting" onclick="dashTab('addlisting')">Add Listing</button>
+        <button class="tab-btn" data-tab="myorders" onclick="dashTab('myorders')">My Orders</button>
+      </div>
+      <div class="sub-view active" id="dashsub-mylistings">
+        <div id="myListingsWrap"></div>
+      </div>
+      <div class="sub-view" id="dashsub-addlisting">
+        <div class="panel" id="addProductPanelSeller">
+          <h3 style="margin-top:0">Add New Product</h3>
+          <div id="sellerProductForm"></div>
+        </div>
+      </div>
+      <div class="sub-view" id="dashsub-myorders">
+        <div id="myOrdersWrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="view" id="view-admin">
+    <h2 class="section-title">Admin Panel</h2>
+    <div class="panel" id="adminLoginPanel">
+      <div class="field"><label>Admin Password</label><input id="adminPassword" type="password"></div>
+      <button class="btn-secondary" onclick="adminLogin()">Unlock Admin Panel</button>
+      <div id="adminLoginMsg"></div>
+    </div>
+
+    <div id="adminContent" style="display:none">
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="sellers" onclick="adminTab('sellers')">Sellers</button>
+        <button class="tab-btn" data-tab="orders" onclick="adminTab('orders')">Orders</button>
+        <button class="tab-btn" data-tab="listings" onclick="adminTab('listings')">Listings</button>
+      </div>
+      <div class="sub-view active" id="admsub-sellers">
+        <div id="allSellersWrap"></div>
+      </div>
+      <div class="sub-view" id="admsub-orders">
+        <div id="ordersWrap"></div>
+      </div>
+      <div class="sub-view" id="admsub-listings">
+        <div id="adminListingsWrap"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="real-backend.js"></script>
+<script>
+let products = [];
+let cart = []; // {id, qty}
+let paymentMode = 'COD';
+let lastCalc = null;
+let lastOrderId = null;
+let adminPasswordCache = '';
+let sellerAuth = null; // {email, password, seller:{id,name,businessName,email}}
+
+/* image/video upload buffers, keyed by form context ('owner' or 'seller') */
+let pendingImages = [];
+let pendingVideo = null;
+
+function go(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('header .nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  if(view==='cart') renderCart();
+  if(view==='checkout') renderCheckout();
+  if(view==='seller' && sellerAuth) refreshSellerDashboard();
+  if(view!=='admin') stopAdminPolling();
+  if(view==='admin' && adminPasswordCache) startAdminPolling();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function sellerTab(tab){
+  document.querySelectorAll('#sellerLoggedOut .tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('#sellerLoggedOut .sub-view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('sub-'+tab).classList.add('active');
+  if(tab==='owner' && document.getElementById('addProductPanelOwner').style.display==='block') loadApprovedSellers();
+}
+function dashTab(tab){
+  document.querySelectorAll('#sellerLoggedIn .tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('#sellerLoggedIn .sub-view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('dashsub-'+tab).classList.add('active');
+  if(tab==='mylistings') loadMyListings();
+  if(tab==='myorders') loadMyOrders();
+  if(tab==='addlisting') renderProductForm('sellerProductForm', publishProductAsSeller);
+}
+let currentAdminTab = 'sellers';
+let adminPollInterval = null;
+function adminTab(tab){
+  currentAdminTab = tab;
+  document.querySelectorAll('#adminContent .tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('#adminContent .sub-view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('admsub-'+tab).classList.add('active');
+  if(tab==='sellers') loadAllSellers();
+  if(tab==='orders') loadOrders();
+  if(tab==='listings') loadAdminListings();
+}
+function startAdminPolling(){
+  stopAdminPolling();
+  adminPollInterval = setInterval(function(){
+    if(currentAdminTab==='sellers') loadAllSellers();
+    else if(currentAdminTab==='orders') loadOrders();
+    else if(currentAdminTab==='listings') loadAdminListings();
+  }, 20000);
+}
+function stopAdminPolling(){
+  if(adminPollInterval){ clearInterval(adminPollInterval); adminPollInterval=null; }
+}
+
+/* ---------- LOAD PRODUCTS (storefront) ---------- */
+function loadProducts(){
+  google.script.run.withSuccessHandler(function(list){
+    products = list;
+    document.getElementById('loadingProducts').style.display = list.length ? 'none' : 'block';
+    if(!list.length) document.getElementById('loadingProducts').textContent = 'No products yet — check back soon!';
+    renderProducts();
+  }).withFailureHandler(function(err){
+    document.getElementById('loadingProducts').textContent = 'Could not load products: ' + err.message;
+  }).getProducts();
+}
+function renderProducts(){
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = '';
+  products.forEach(p=>{
+    const thumb = p.images && p.images.length ? `<img src="${p.images[0]}">` : '🎁';
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-img">${thumb}${p.videoUrl ? '<div class="video-badge">🎬 video</div>' : ''}</div>
+      <div class="card-body">
+        <div class="card-cat">${p.category}</div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-seller">Sold by ${p.sellerName || 'Store'}</div>
+        <div class="stock-tag">${p.stock} in stock</div>
+        <div class="card-bottom">
+          <div class="price">₹${p.price}</div>
+          <button class="add-btn" onclick="addToCart('${p.id}')">Add +</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+function addToCart(id){
+  const existing = cart.find(c=>c.id===id);
+  if(existing) existing.qty++; else cart.push({id, qty:1});
+  updateCartCount();
+}
+function updateCartCount(){
+  document.getElementById('cartCount').textContent = cart.reduce((s,c)=>s+c.qty,0);
+}
+
+/* ---------- CART ---------- */
+function renderCart(){
+  const wrap = document.getElementById('cartItemsWrap');
+  const summaryPanel = document.getElementById('cartSummaryPanel');
+  if(cart.length===0){
+    wrap.innerHTML = '<div class="empty">Your cart is empty.</div>';
+    summaryPanel.style.display='none';
+    return;
+  }
+  wrap.innerHTML='';
+  cart.forEach(c=>{
+    const p = products.find(x=>x.id===c.id);
+    if(!p) return;
+    const div = document.createElement('div');
+    div.className='cart-item';
+    div.innerHTML = `
+      <div class="ci-title">${p.title}<br><small style="color:#a79fc9">₹${p.price} each</small></div>
+      <div class="qty-box"><button onclick="changeQty('${p.id}',-1)">−</button><span>${c.qty}</span><button onclick="changeQty('${p.id}',1)">+</button></div>
+      <div style="width:70px;text-align:right;font-family:monospace">₹${p.price*c.qty}</div>
+      <button class="remove-x" onclick="removeFromCart('${p.id}')">✕</button>`;
+    wrap.appendChild(div);
+  });
+  summaryPanel.style.display='block';
+  refreshCalculation('COD_preview');
+}
+function changeQty(id,d){
+  const item = cart.find(c=>c.id===id);
+  if(!item) return;
+  item.qty += d;
+  if(item.qty<1){ removeFromCart(id); return; }
+  renderCart();
+}
+function removeFromCart(id){
+  cart = cart.filter(c=>c.id!==id);
+  updateCartCount();
+  renderCart();
+}
+function refreshCalculation(context){
+  if(cart.length===0) return;
+  google.script.run.withSuccessHandler(function(calc){
+    lastCalc = calc;
+    if(context==='COD_preview'){
+      document.getElementById('sSubtotal').textContent = '₹'+calc.subtotal;
+      document.getElementById('sBase').textContent = '₹'+calc.base;
+      document.getElementById('sGst').textContent = '₹'+calc.gst;
+      document.getElementById('sShipping').textContent = calc.shipping===0 ? 'FREE' : '₹'+calc.shipping;
+      document.getElementById('sTotal').textContent = '₹'+calc.grandTotal;
+    } else {
+      google.script.run.withSuccessHandler(function(upiLink){
+        renderCheckoutSummary(calc, upiLink);
+      }).getUpiLink(calc.amountDueNow, 'PREVIEW');
+    }
+  }).calculateOrder(cart, context==='COD_preview' ? 'COD' : paymentMode);
+}
+
+/* ---------- CHECKOUT ---------- */
+function setPaymentMode(mode){
+  paymentMode = mode;
+  document.getElementById('opt-COD').classList.toggle('active', mode==='COD');
+  document.getElementById('opt-Prepaid').classList.toggle('active', mode==='Prepaid');
+  renderCheckout();
+}
+function renderCheckout(){
+  if(cart.length===0){
+    document.getElementById('checkoutSummary').innerHTML = '<div class="empty">Your cart is empty.</div>';
+    document.getElementById('qrArea').innerHTML='';
+    return;
+  }
+  refreshCalculation('checkout');
+}
+function renderCheckoutSummary(calc, upiLink){
+  const wrap = document.getElementById('checkoutSummary');
+  wrap.innerHTML = `
+    <div class="summary-row"><span>Item Subtotal</span><b>₹${calc.subtotal}</b></div>
+    <div class="summary-row"><span>&nbsp;&nbsp;— Base Price</span><b>₹${calc.base}</b></div>
+    <div class="summary-row"><span>&nbsp;&nbsp;— GST (18%)</span><b>₹${calc.gst}</b></div>
+    <div class="summary-row"><span>Shipping</span><b>${calc.shipping===0?'FREE':'₹'+calc.shipping}</b></div>
+    <div class="summary-row total"><span>Grand Total</span><b>₹${calc.grandTotal}</b></div>
+    ${calc.paymentMode==='COD' ? `<div class="summary-row" style="margin-top:8px"><span>Advance to pay now (secures order)</span><b>₹${calc.amountDueNow}</b></div>
+    <div class="summary-row"><span>Balance on delivery</span><b>₹${calc.remainingAmount}</b></div>` : ''}
+  `;
+  const qrArea = document.getElementById('qrArea');
+  const amount = calc.amountDueNow;
+  const qrImgUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(upiLink);
+  qrArea.innerHTML = `
+    <div class="qr-box">
+      <div class="qr-amount">₹${amount}</div>
+      <div style="font-size:12px;color:#8a8397;margin-bottom:8px">${calc.paymentMode==='Prepaid' ? 'Pay full amount via UPI' : 'Pay advance via UPI to confirm your order'}</div>
+      <img src="${qrImgUrl}">
+      <div style="font-size:11px;margin-top:8px;color:#8a8397">Scan with any UPI app · Paytm / GPay / PhonePe / BHIM</div>
+    </div>
+    <div class="note">After paying, tap "Confirm Order" below. On the confirmation screen you can submit your UTR / transaction reference number so we can verify your payment faster.</div>`;
+}
+function submitOrder(){
+  const name = document.getElementById('cName').value.trim();
+  const phone = document.getElementById('cPhone').value.trim();
+  const address = document.getElementById('cAddress').value.trim();
+  if(!name || !phone || !address){ alert('Please fill in your name, phone and address.'); return; }
+  if(cart.length===0){ alert('Your cart is empty.'); return; }
+  const btn = event.target;
+  btn.innerHTML = '<span class="spinner"></span>Placing order...';
+  btn.disabled = true;
+  google.script.run.withSuccessHandler(function(res){
+    btn.disabled = false;
+    if(!res.success){
+      document.getElementById('orderStatusMsg').innerHTML = '<div class="note" style="color:#e2574c">' + res.message + '</div>';
+      btn.textContent = 'Confirm Order';
+      return;
+    }
+    cart = [];
+    updateCartCount();
+    lastOrderId = res.orderId;
+    renderConfirmation(res);
+    go('confirm');
+  }).withFailureHandler(function(err){
+    btn.disabled = false;
+    btn.textContent = 'Confirm Order';
+    document.getElementById('orderStatusMsg').innerHTML = '<div class="note" style="color:#e2574c">Error: ' + err.message + '</div>';
+  }).placeOrder({
+    customer: {name, phone, address},
+    cartItems: cart,
+    paymentMode: paymentMode
+  });
+}
+function renderConfirmation(res){
+  const c = res.calc;
+  document.getElementById('confirmBox').innerHTML = `
+    <div class="big-emoji">🎉</div>
+    <h2>Order Placed!</h2>
+    <p style="color:#a79fc9">Order ID <b style="font-family:monospace">${res.orderId}</b></p>
+    <div class="panel" style="text-align:left">
+      <div class="summary-row"><span>Grand Total</span><b>₹${c.grandTotal}</b></div>
+      <div class="summary-row"><span>Payment Mode</span><b>${c.paymentMode}</b></div>
+      <div class="summary-row"><span>Paid Now</span><b>₹${c.amountDueNow}</b></div>
+      <div class="summary-row"><span>Due on Delivery</span><b>₹${c.remainingAmount}</b></div>
+    </div>
+    <div class="panel" style="text-align:left">
+      <h3 style="margin-top:0">Already paid? Submit your UTR</h3>
+      <p class="note" style="margin-top:0">Enter the UTR / transaction reference number from your UPI app so we can verify your payment faster.</p>
+      <div class="field"><input id="utrInput" placeholder="e.g. 402812345678"></div>
+      <button class="btn-secondary" onclick="submitUtrForOrder()">Submit UTR</button>
+      <div id="utrMsg"></div>
+    </div>
+    <button class="btn-primary" onclick="go('home')">Continue Shopping</button>`;
+}
+function submitUtrForOrder(){
+  const utr = document.getElementById('utrInput').value.trim();
+  if(!utr){ alert('Enter your UTR / transaction ID first.'); return; }
+  google.script.run.withSuccessHandler(function(res){
+    document.getElementById('utrMsg').innerHTML = res.success
+      ? '<div class="note" style="color:#6fcf6f">✓ UTR submitted — we will verify shortly.</div>'
+      : '<div class="note" style="color:#e2574c">' + res.message + '</div>';
+  }).submitUtr(lastOrderId, utr);
+}
+
+/* ---------- SHARED: product form builder (used for both owner + seller add-product) ---------- */
+function renderProductForm(containerId, onSubmit){
+  const container = document.getElementById(containerId);
+  container.innerHTML = `
+    <div class="field"><label>Title</label><input id="${containerId}-title"></div>
+    <div class="field"><label>Category</label>
+      <select id="${containerId}-category"><option>Toys</option><option>Gifts</option><option>Space & Novelty</option><option>Party & Festive</option><option>Books & Games</option></select>
+    </div>
+    <div class="field"><label>Price (₹, final customer price)</label><input id="${containerId}-price" type="number"></div>
+    <div class="field"><label>Stock Quantity</label><input id="${containerId}-stock" type="number"></div>
+    <div class="field"><label>Description</label><textarea id="${containerId}-desc" rows="3"></textarea></div>
+    <div class="field">
+      <label>Product Images (multiple allowed)</label>
+      <input type="file" id="${containerId}-images" accept="image/*" multiple style="display:none" onchange="previewImages('${containerId}')">
+      <label class="upload-label" for="${containerId}-images">📷 Choose Images</label>
+      <div class="preview-row" id="${containerId}-imgPreview"></div>
+    </div>
+    <div class="field">
+      <label>Product Video (optional)</label>
+      <input type="file" id="${containerId}-video" accept="video/*" style="display:none" onchange="previewVideo('${containerId}')">
+      <label class="upload-label" for="${containerId}-video">🎬 Choose Video</label>
+      <div class="preview-row" id="${containerId}-vidPreview"></div>
+    </div>
+    <button class="btn-primary" id="${containerId}-submitBtn">🚀 Publish Listing</button>
+    <div id="${containerId}-msg"></div>`;
+  document.getElementById(containerId+'-submitBtn').onclick = function(ev){ onSubmit(containerId, ev.target); };
+}
+function previewImages(containerId){
+  const input = document.getElementById(containerId+'-images');
+  const preview = document.getElementById(containerId+'-imgPreview');
+  preview.innerHTML=''; pendingImages=[];
+  Array.from(input.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const dataUrl = e.target.result;
+      pendingImages.push({ base64: dataUrl.split(',')[1], mime: file.type });
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function previewVideo(containerId){
+  const input = document.getElementById(containerId+'-video');
+  const preview = document.getElementById(containerId+'-vidPreview');
+  preview.innerHTML=''; pendingVideo=null;
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const dataUrl = e.target.result;
+    pendingVideo = { base64: dataUrl.split(',')[1], mime: file.type };
+    const vid = document.createElement('video');
+    vid.src = dataUrl; vid.muted = true;
+    preview.appendChild(vid);
+  };
+  reader.readAsDataURL(file);
+}
+function readProductForm_(containerId){
+  return {
+    title: document.getElementById(containerId+'-title').value.trim(),
+    category: document.getElementById(containerId+'-category').value,
+    price: document.getElementById(containerId+'-price').value,
+    stock: document.getElementById(containerId+'-stock').value,
+    desc: document.getElementById(containerId+'-desc').value.trim(),
+    images: pendingImages, video: pendingVideo
+  };
+}
+function clearProductForm_(containerId){
+  ['title','price','stock','desc'].forEach(f=>document.getElementById(containerId+'-'+f).value='');
+  document.getElementById(containerId+'-imgPreview').innerHTML='';
+  document.getElementById(containerId+'-vidPreview').innerHTML='';
+  pendingImages=[]; pendingVideo=null;
+}
+
+/* ---------- OWNER: ADD PRODUCT (any approved vendor) ---------- */
+function sellerLoginOwner(){
+  const pwd = document.getElementById('sellerPassword').value;
+  google.script.run.withSuccessHandler(function(ok){
+    if(ok){
+      document.getElementById('addProductPanelOwner').style.display='block';
+      document.getElementById('ownerLoginMsg').innerHTML = '<div class="note" style="color:#6fcf6f">✓ Unlocked</div>';
+      loadApprovedSellers();
+      renderProductForm('ownerProductForm', publishProductAsOwner);
+    } else {
+      document.getElementById('ownerLoginMsg').innerHTML = '<div class="note" style="color:#e2574c">Incorrect password</div>';
+    }
+  }).verifySellerPassword(pwd);
+}
+function loadApprovedSellers(){
+  google.script.run.withSuccessHandler(function(list){
+    const sel = document.getElementById('pSellerId');
+    sel.innerHTML = '<option value="">— select vendor —</option>' +
+      list.map(s=>`<option value="${s.id}">${s.name} (${s.businessName})</option>`).join('');
+  }).getApprovedSellers();
+}
+function publishProductAsOwner(containerId, btn){
+  const sellerId = document.getElementById('pSellerId').value;
+  if(!sellerId){ alert('Select which approved vendor is selling this product.'); return; }
+  const product = readProductForm_(containerId);
+  product.sellerId = sellerId;
+  if(!product.title || !product.price || !product.stock){ alert('Fill in title, price and stock.'); return; }
+  const pwd = document.getElementById('sellerPassword').value;
+  btn.innerHTML = '<span class="spinner"></span>Publishing...';
+  btn.disabled = true;
+  google.script.run.withSuccessHandler(function(res){
+    btn.disabled = false; btn.textContent = '🚀 Publish Listing';
+    const msg = document.getElementById(containerId+'-msg');
+    if(res.success){
+      msg.innerHTML = '<div class="note" style="color:#6fcf6f">✓ Product published!</div>';
+      clearProductForm_(containerId);
+      loadProducts();
+    } else {
+      msg.innerHTML = '<div class="note" style="color:#e2574c">' + res.message + '</div>';
+    }
+  }).withFailureHandler(function(err){
+    btn.disabled = false; btn.textContent = '🚀 Publish Listing';
+    document.getElementById(containerId+'-msg').innerHTML = '<div class="note" style="color:#e2574c">Error: ' + err.message + '</div>';
+  }).addProduct(pwd, product);
+}
+
+/* ---------- SELLER: REGISTRATION ---------- */
+function submitSellerRegistration(){
+  const data = {
+    sellerName: document.getElementById('rName').value.trim(),
+    businessName: document.getElementById('rBusiness').value.trim(),
+    email: document.getElementById('rEmail').value.trim(),
+    contact: document.getElementById('rContact').value.trim(),
+    address: document.getElementById('rAddress').value.trim(),
+    accountHolder: document.getElementById('rAccHolder').value.trim(),
+    accountNumber: document.getElementById('rAccNumber').value.trim(),
+    ifsc: document.getElementById('rIfsc').value.trim(),
+    bankName: document.getElementById('rBankName').value.trim(),
+    upiId: document.getElementById('rUpi').value.trim()
+  };
+  if(!data.sellerName || !data.businessName || !data.email || !data.contact || !data.address){
+    alert('Please fill in all fields marked *'); return;
+  }
+  const btn = event.target;
+  btn.innerHTML = '<span class="spinner"></span>Submitting...';
+  btn.disabled = true;
+  google.script.run.withSuccessHandler(function(res){
+    btn.disabled = false;
+    btn.textContent = 'Submit Registration';
+    if(res.success){
+      document.getElementById('registerMsg').innerHTML = '<div class="note" style="color:#6fcf6f">✓ Registration submitted! We will review and email you once approved.</div>';
+      ['rName','rBusiness','rEmail','rContact','rAddress','rAccHolder','rAccNumber','rIfsc','rBankName','rUpi'].forEach(id=>document.getElementById(id).value='');
+    } else {
+      document.getElementById('registerMsg').innerHTML = '<div class="note" style="color:#e2574c">' + res.message + '</div>';
+    }
+  }).registerSeller(data);
+}
+
+/* ---------- SELLER: LOGIN + DASHBOARD ---------- */
+function doSellerLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  google.script.run.withSuccessHandler(function(res){
+    if(res.success){
+      sellerAuth = { email, password, seller: res.seller };
+      document.getElementById('sellerLoggedOut').style.display='none';
+      document.getElementById('sellerLoggedIn').style.display='block';
+      document.getElementById('dashSellerName').textContent = res.seller.name;
+      document.getElementById('dashBusinessName').textContent = res.seller.businessName;
+      dashTab('mylistings');
+    } else {
+      document.getElementById('sellerLoginMsg').innerHTML = '<div class="note" style="color:#e2574c">' + res.message + '</div>';
+    }
+  }).sellerLogin(email, password);
+}
+function sellerLogout(){
+  sellerAuth = null;
+  document.getElementById('sellerLoggedIn').style.display='none';
+  document.getElementById('sellerLoggedOut').style.display='block';
+  document.getElementById('loginPassword').value='';
+}
+function refreshSellerDashboard(){
+  if(!sellerAuth) return;
+  dashTab('mylistings');
+}
+let myListingsCache = [];
+let adminListingsCache = [];
+let editImagesBuffer = {};
+let editVideoBuffer = {};
+
+function loadMyListings(){
+  const wrap = document.getElementById('myListingsWrap');
+  wrap.innerHTML = '<div class="empty">Loading…</div>';
+  google.script.run.withSuccessHandler(function(res){
+    if(!res.success){ wrap.innerHTML = '<div class="empty">'+res.message+'</div>'; return; }
+    myListingsCache = res.products;
+    if(!res.products.length){ wrap.innerHTML = '<div class="empty">You haven\'t listed any products yet. Use "Add Listing" to publish your first one.</div>'; return; }
+    wrap.innerHTML = '<div class="grid"></div>';
+    const grid = wrap.querySelector('.grid');
+    res.products.forEach(p=> grid.appendChild(renderListingCard(p, 'seller')));
+  }).getSellerListings(sellerAuth.email, sellerAuth.password);
+}
+function loadAdminListings(){
+  const wrap = document.getElementById('adminListingsWrap');
+  wrap.innerHTML = '<div class="empty">Loading…</div>';
+  google.script.run.withSuccessHandler(function(list){
+    adminListingsCache = list;
+    if(!list.length){ wrap.innerHTML = '<div class="empty">No listings yet.</div>'; return; }
+    wrap.innerHTML = '<div class="grid"></div>';
+    const grid = wrap.querySelector('.grid');
+    list.forEach(p=> grid.appendChild(renderListingCard(p, 'admin')));
+  }).getProducts();
+}
+function escapeAttr_(str){ return String(str==null?'':str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function renderListingCard(p, mode){
+  const thumb = p.images && p.images.length ? `<img src="${p.images[0]}">` : '🎁';
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.innerHTML = `
+    <div class="card-img">${thumb}${p.videoUrl ? '<div class="video-badge">🎬 video</div>' : ''}</div>
+    <div class="card-body" id="listing-body-${mode}-${p.id}">
+      <div class="card-cat">${p.category}</div>
+      <div class="card-title">${p.title}</div>
+      ${mode==='admin' ? `<div class="card-seller">Sold by ${p.sellerName || 'Store'}</div>` : ''}
+      <div class="stock-tag">${p.stock} in stock</div>
+      <div class="card-bottom"><div class="price">₹${p.price}</div></div>
+      <div class="order-actions">
+        <button class="btn-small btn-approve" onclick="openEditListing('${mode}','${p.id}')">Edit</button>
+        <button class="btn-small btn-reject" onclick="deleteListing('${mode}','${p.id}')">Delete</button>
+      </div>
+    </div>`;
+  return div;
+}
+function openEditListing(mode, productId){
+  const list = mode==='seller' ? myListingsCache : adminListingsCache;
+  const p = list.find(x=>x.id===productId);
+  if(!p) return;
+  const cats = ['Toys','Gifts','Space & Novelty','Party & Festive','Books & Games'];
+  const bodyEl = document.getElementById('listing-body-'+mode+'-'+productId);
+  bodyEl.innerHTML = `
+    <div class="field"><label>Title</label><input id="edit-title-${productId}" value="${escapeAttr_(p.title)}"></div>
+    <div class="field"><label>Category</label>
+      <select id="edit-category-${productId}">${cats.map(c=>`<option ${c===p.category?'selected':''}>${c}</option>`).join('')}</select>
+    </div>
+    <div class="field"><label>Price (₹)</label><input id="edit-price-${productId}" type="number" value="${p.price}"></div>
+    <div class="field"><label>Stock</label><input id="edit-stock-${productId}" type="number" value="${p.stock}"></div>
+    <div class="field"><label>Description</label><textarea id="edit-desc-${productId}" rows="2">${escapeAttr_(p.desc||'')}</textarea></div>
+    <div class="field">
+      <label>Replace Images (optional — leave empty to keep current)</label>
+      <input type="file" id="edit-images-${productId}" accept="image/*" multiple style="display:none" onchange="previewEditImages('${productId}')">
+      <label class="upload-label" for="edit-images-${productId}">📷 Choose New Images</label>
+      <div class="preview-row" id="edit-imgPreview-${productId}"></div>
+    </div>
+    <div class="field">
+      <label>Replace Video (optional)</label>
+      <input type="file" id="edit-video-${productId}" accept="video/*" style="display:none" onchange="previewEditVideo('${productId}')">
+      <label class="upload-label" for="edit-video-${productId}">🎬 Choose New Video</label>
+      <div class="preview-row" id="edit-vidPreview-${productId}"></div>
+      ${p.videoUrl ? `<div class="field" style="margin-top:6px"><label style="text-transform:none;font-size:12px"><input type="checkbox" id="edit-removevideo-${productId}"> Remove current video</label></div>` : ''}
+    </div>
+    <div class="order-actions">
+      <button class="btn-small btn-approve" onclick="saveEditListing('${mode}','${productId}')">Save</button>
+      <button class="btn-small" style="background:rgba(255,255,255,0.15);color:#fff" onclick="cancelEditListing('${mode}')">Cancel</button>
+    </div>`;
+}
+function cancelEditListing(mode){
+  if(mode==='seller') loadMyListings(); else loadAdminListings();
+}
+function previewEditImages(productId){
+  const input = document.getElementById('edit-images-'+productId);
+  const preview = document.getElementById('edit-imgPreview-'+productId);
+  preview.innerHTML=''; editImagesBuffer[productId]=[];
+  Array.from(input.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const dataUrl = e.target.result;
+      editImagesBuffer[productId].push({ base64: dataUrl.split(',')[1], mime: file.type });
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function previewEditVideo(productId){
+  const input = document.getElementById('edit-video-'+productId);
+  const preview = document.getElementById('edit-vidPreview-'+productId);
+  preview.innerHTML=''; delete editVideoBuffer[productId];
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const dataUrl = e.target.result;
+    editVideoBuffer[productId] = { base64: dataUrl.split(',')[1], mime: file.type };
+    const vid = document.createElement('video');
+    vid.src = dataUrl; vid.muted = true;
+    preview.appendChild(vid);
+  };
+  reader.readAsDataURL(file);
+}
+function saveEditListing(mode, productId){
+  const removeVideoEl = document.getElementById('edit-removevideo-'+productId);
+  const updates = {
+    title: document.getElementById('edit-title-'+productId).value.trim(),
+    category: document.getElementById('edit-category-'+productId).value,
+    price: document.getElementById('edit-price-'+productId).value,
+    stock: document.getElementById('edit-stock-'+productId).value,
+    desc: document.getElementById('edit-desc-'+productId).value.trim(),
+    images: editImagesBuffer[productId] || [],
+    video: editVideoBuffer[productId] || null,
+    removeVideo: removeVideoEl ? removeVideoEl.checked : false
+  };
+  const cleanup = function(){ delete editImagesBuffer[productId]; delete editVideoBuffer[productId]; };
+  if(mode==='seller'){
+    google.script.run.withSuccessHandler(function(res){
+      if(res.success){ cleanup(); loadMyListings(); loadProducts(); }
+      else alert(res.message);
+    }).updateProductAsSeller(sellerAuth.email, sellerAuth.password, productId, updates);
+  } else {
+    google.script.run.withSuccessHandler(function(res){
+      if(res.success){ cleanup(); loadAdminListings(); loadProducts(); }
+      else alert(res.message);
+    }).updateProductAsAdmin(adminPasswordCache, productId, updates);
+  }
+}
+function deleteListing(mode, productId){
+  if(!confirm('Delete this listing permanently? This cannot be undone.')) return;
+  if(mode==='seller'){
+    google.script.run.withSuccessHandler(function(res){
+      if(res.success){ loadMyListings(); loadProducts(); }
+      else alert(res.message);
+    }).deleteProductAsSeller(sellerAuth.email, sellerAuth.password, productId);
+  } else {
+    google.script.run.withSuccessHandler(function(res){
+      if(res.success){ loadAdminListings(); loadProducts(); }
+      else alert(res.message);
+    }).deleteProductAsAdmin(adminPasswordCache, productId);
+  }
+}
+function publishProductAsSeller(containerId, btn){
+  const product = readProductForm_(containerId);
+  if(!product.title || !product.price || !product.stock){ alert('Fill in title, price and stock.'); return; }
+  btn.innerHTML = '<span class="spinner"></span>Publishing...';
+  btn.disabled = true;
+  google.script.run.withSuccessHandler(function(res){
+    btn.disabled = false; btn.textContent = '🚀 Publish Listing';
+    const msg = document.getElementById(containerId+'-msg');
+    if(res.success){
+      msg.innerHTML = '<div class="note" style="color:#6fcf6f">✓ Product published!</div>';
+      clearProductForm_(containerId);
+      loadProducts();
+    } else {
+      msg.innerHTML = '<div class="note" style="color:#e2574c">' + res.message + '</div>';
+    }
+  }).withFailureHandler(function(err){
+    btn.disabled = false; btn.textContent = '🚀 Publish Listing';
+    document.getElementById(containerId+'-msg').innerHTML = '<div class="note" style="color:#e2574c">Error: ' + err.message + '</div>';
+  }).addProductAsSeller(sellerAuth.email, sellerAuth.password, product);
+}
+function loadMyOrders(){
+  const wrap = document.getElementById('myOrdersWrap');
+  wrap.innerHTML = '<div class="empty">Loading…</div>';
+  google.script.run.withSuccessHandler(function(res){
+    if(!res.success){ wrap.innerHTML = '<div class="empty">'+res.message+'</div>'; return; }
+    if(!res.orders.length){ wrap.innerHTML = '<div class="empty">No orders yet for your products.</div>'; return; }
+    wrap.innerHTML = '';
+    res.orders.forEach(o=>{
+      const itemsHtml = o.myItems.map(li=>li.title+' x'+li.qty).join(', ');
+      const div = document.createElement('div');
+      div.className = 'order-card';
+      div.innerHTML = `
+        <div class="oc-row"><b>${o.orderId}</b> <span class="status-pill status-${o.orderStatus}">${o.orderStatus}</span></div>
+        <div class="oc-row">${o.customerName} · ${o.phone}</div>
+        <div class="oc-row">${o.address}</div>
+        <div class="oc-row">Your items: ${itemsHtml} — ₹${o.myTotal}</div>
+        <div class="oc-row">Payment: ${o.paymentMode} · ${o.paymentStatus}</div>`;
+      wrap.appendChild(div);
+    });
+  }).getSellerOrders(sellerAuth.email, sellerAuth.password);
+}
+
+/* ---------- ADMIN ---------- */
+function adminLogin(){
+  const pwd = document.getElementById('adminPassword').value;
+  google.script.run.withSuccessHandler(function(ok){
+    if(ok){
+      adminPasswordCache = pwd;
+      document.getElementById('adminContent').style.display='block';
+      document.getElementById('adminLoginMsg').innerHTML = '<div class="note" style="color:#6fcf6f">✓ Unlocked</div>';
+      loadAllSellers();
+      startAdminPolling();
+    } else {
+      document.getElementById('adminLoginMsg').innerHTML = '<div class="note" style="color:#e2574c">Incorrect admin password</div>';
+    }
+  }).verifyAdminPassword(pwd);
+}
+function loadAllSellers(){
+  const wrap = document.getElementById('allSellersWrap');
+  wrap.innerHTML = '<div class="empty">Loading…</div>';
+  google.script.run.withSuccessHandler(function(res){
+    if(!res.success){ wrap.innerHTML = '<div class="empty">'+res.message+'</div>'; return; }
+    if(!res.sellers.length){ wrap.innerHTML = '<div class="empty">No seller registrations yet.</div>'; return; }
+    wrap.innerHTML = '';
+    res.sellers.forEach(s=>{
+      const div = document.createElement('div');
+      div.className = 'seller-card';
+      let actions = '';
+      if(s.status === 'Pending'){
+        actions = `<button class="btn-small btn-approve" onclick="decideSeller('${s.id}','Approved')">Approve</button>
+                   <button class="btn-small btn-reject" onclick="decideSeller('${s.id}','Rejected')">Reject</button>`;
+      } else if(s.status === 'Approved'){
+        actions = `<button class="btn-small btn-reject" onclick="decideSeller('${s.id}','Rejected')">Revoke Access</button>`;
+      } else {
+        actions = `<button class="btn-small btn-approve" onclick="decideSeller('${s.id}','Approved')">Approve</button>`;
+      }
+      div.innerHTML = `
+        <div class="sc-row"><b>${s.sellerName}</b> — ${s.businessName} <span class="status-pill status-${s.status}">${s.status}</span></div>
+        <div class="sc-row">📧 ${s.email} · 📞 ${s.contact}</div>
+        <div class="sc-row">📍 ${s.address}</div>
+        <div class="sc-row">🏦 ${s.accountHolder || '-'} · ${s.bankName || '-'} · ${s.accountNumber || '-'} · IFSC ${s.ifsc || '-'}</div>
+        <div class="sc-row">UPI: ${s.upiId || '-'}</div>
+        ${s.rejectionReason ? `<div class="sc-row">Reason: ${s.rejectionReason}</div>` : ''}
+        <div class="seller-actions">${actions}</div>`;
+      wrap.appendChild(div);
+    });
+  }).getAllSellers(adminPasswordCache);
+}
+function decideSeller(sellerId, status){
+  let reason = '';
+  if(status==='Rejected'){
+    reason = prompt('Reason (optional):') || '';
+  }
+  google.script.run.withSuccessHandler(function(res){
+    if(res.success) loadAllSellers();
+    else alert(res.message);
+  }).updateSellerStatus(adminPasswordCache, sellerId, status, reason);
+}
+function loadOrders(){
+  const wrap = document.getElementById('ordersWrap');
+  wrap.innerHTML = '<div class="empty">Loading…</div>';
+  google.script.run.withSuccessHandler(function(res){
+    if(!res.success){ wrap.innerHTML = '<div class="empty">'+res.message+'</div>'; return; }
+    if(!res.orders.length){ wrap.innerHTML = '<div class="empty">No orders yet.</div>'; return; }
+    wrap.innerHTML = '';
+    res.orders.forEach(o=>{
+      const div = document.createElement('div');
+      div.className = 'order-card';
+      div.innerHTML = `
+        <div class="oc-row"><b>${o.orderId}</b> <span class="status-pill status-${o.orderStatus}">${o.orderStatus}</span></div>
+        <div class="oc-row">${o.customerName} · ${o.phone}</div>
+        <div class="oc-row">${o.address}</div>
+        <div class="oc-row">${o.items}</div>
+        <div class="oc-row">Total ₹${o.grandTotal} · ${o.paymentMode} · Paid now ₹${o.amountDueNow} · Balance ₹${o.remaining}</div>
+        <div class="oc-row">Payment status: <b>${o.paymentStatus}</b>${o.utr ? ' · UTR: '+o.utr : ''}</div>
+        ${o.cancelReason ? `<div class="oc-row">Cancellation reason: ${o.cancelReason}</div>` : ''}
+        <div class="order-actions">
+          <select class="status-select" id="status-${o.orderId}">
+            ${['Received','Processing','Shipped','Delivered','Cancelled'].map(s=>`<option ${s===o.orderStatus?'selected':''}>${s}</option>`).join('')}
+          </select>
+          <button class="btn-small btn-approve" onclick="saveOrderStatus('${o.orderId}')">Update Status</button>
+          <button class="btn-small btn-approve" onclick="markPaid('${o.orderId}')">Mark Paid</button>
+        </div>`;
+      wrap.appendChild(div);
+    });
+  }).getOrders(adminPasswordCache, 100);
+}
+function saveOrderStatus(orderId){
+  const sel = document.getElementById('status-'+orderId);
+  const newStatus = sel.value;
+  let reason = '';
+  if(newStatus === 'Cancelled'){
+    reason = prompt('Reason for cancelling this order:') || '';
+    if(!reason){ alert('Please provide a cancellation reason.'); return; }
+  }
+  google.script.run.withSuccessHandler(function(res){
+    if(res.success) loadOrders();
+    else alert(res.message);
+  }).updateOrderStatus(adminPasswordCache, orderId, newStatus, reason);
+}
+function markPaid(orderId){
+  google.script.run.withSuccessHandler(function(res){
+    if(res.success) loadOrders();
+    else alert(res.message);
+  }).updatePaymentStatus(adminPasswordCache, orderId, 'Paid');
+}
+
+loadProducts();
+</script>
+</body>
+</html>
